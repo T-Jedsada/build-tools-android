@@ -2,6 +2,12 @@ FROM ubuntu:latest
 
 MAINTAINER Jedsata Tiwonvorakul "pondthaitay@gmail.com"
 
+# Install java8
+RUN apt-get update && apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:webupd8team/java && apt-get update
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+
 ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/build-tools_r26-linux.zip" \
     ANDROID_BUILD_TOOLS_VERSION=27.0.3 \
     ANDROID_APIS="android-27" \
@@ -14,14 +20,6 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/build-tools_r26-li
 ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION:$ANT_HOME/bin:$MAVEN_HOME/bin:$GRADLE_HOME/bin
 
 WORKDIR /opt
-
-# Install Java.
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get install -y oracle-java8-installer && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/oracle-jdk8-installer
 
 RUN dpkg --add-architecture i386 && \
     apt-get -qq update && \
