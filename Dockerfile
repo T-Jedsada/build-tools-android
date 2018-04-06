@@ -8,29 +8,31 @@ RUN apt-get update && apt-get install -y software-properties-common && \
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 
-ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/build-tools_r26-linux.zip" \
-    ANDROID_BUILD_TOOLS_VERSION=27.0.3 \
-    ANDROID_APIS="android-27" \
-    ANT_HOME="/usr/share/ant" \
-    MAVEN_HOME="/usr/share/maven" \
-    GRADLE_HOME="/usr/share/gradle" \
-    ANDROID_HOME="/opt/android" \
-    JAVA_HOME=/usr/lib/jvm/java-8-oracle
+# Install Deps
+RUN dpkg --add-architecture i386 && apt-get update && \
+    apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 \
+    lib32gcc1 lib32ncurses5 lib32z1 python curl unzip
 
-RUN \
-    # Installs Android SDK
-    mkdir android && cd android && \
-    wget -O tools.zip ${ANDROID_SDK_URL} && \
-    unzip tools.zip && rm tools.zip && \
-    echo y | android update sdk -a -u -t platform-tools,${ANDROID_APIS},build-tools-${ANDROID_BUILD_TOOLS_VERSION} && \
-    chmod a+x -R $ANDROID_HOME && \
-    chown -R root:root $ANDROID_HOME && \
+# Install Android SDK
+RUN cd /opt && wget --output-document=android-sdk.zip \
+    --quiet https://dl.google.com/android/repository/tools_r25.2.5-linux.zip && \
+    unzip android-sdk.zip && rm -f android-sdk.zip && \
+    chown -R root.root android-sdk-linux
 
-    # Clean up
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    apt-get autoremove -y && \
-    apt-get clean
+# Setup environment
+ENV ANDROID_HOME /opt/android-sdk-linux
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
-ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION:$ANT_HOME/bin:$MAVEN_HOME/bin:$GRADLE_HOME/bin
+# Install sdk elements
+COPY tools /opt/tools
+ENV PATH ${PATH}:/opt/tools
+RUN ["/opt/tools/android-accept-licenses.sh", "android update sdk --all --no-ui --filter \
+    platform-tools,android-27,build-tools-27,extra-android-m2repository,extra-google-m2repository"]
 
-WORKDIR /opt
+# Cleaning
+RUN apt-get clean
+
+# Create workspace
+RUN mkdir -p /pondthaitay/
+
+WORKDIR /pondthaitay/
