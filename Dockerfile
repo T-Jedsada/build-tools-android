@@ -17,8 +17,7 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/build-tools_r26-li
     ANDROID_HOME="/opt/android" \
     JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-RUN apt-get -qq install -y wget curl maven ant gradle libncurses5:i386 libstdc++6:i386 zlib1g:i386 && \
-
+RUN \
     # Installs Android SDK
     mkdir android && cd android && \
     wget -O tools.zip ${ANDROID_SDK_URL} && \
