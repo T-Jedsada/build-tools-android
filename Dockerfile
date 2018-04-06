@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-MAINTAINER Jedsata Tiwonvorakul "pondthaitay@gmail.com"
+LABEL maintainer "Jedsata Tiwonvorakul <pondthaitay@gmail.com>" 
 
 # Install java8
 RUN apt-get update && apt-get install -y software-properties-common && \
