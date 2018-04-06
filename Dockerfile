@@ -1,4 +1,4 @@
-FROM dockerfile/ubuntu
+FROM ubuntu:latest
 
 MAINTAINER Jedsata Tiwonvorakul "pondthaitay@gmail.com"
 
