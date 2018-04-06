@@ -17,13 +17,7 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/build-tools_r26-li
     ANDROID_HOME="/opt/android" \
     JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION:$ANT_HOME/bin:$MAVEN_HOME/bin:$GRADLE_HOME/bin
-
-WORKDIR /opt
-
-RUN dpkg --add-architecture i386 && \
-    apt-get -qq update && \
-    apt-get -qq install -y wget curl maven ant gradle libncurses5:i386 libstdc++6:i386 zlib1g:i386 && \
+RUN apt-get -qq install -y wget curl maven ant gradle libncurses5:i386 libstdc++6:i386 zlib1g:i386 && \
 
     # Installs Android SDK
     mkdir android && cd android && \
@@ -37,3 +31,7 @@ RUN dpkg --add-architecture i386 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoremove -y && \
     apt-get clean
+
+ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION:$ANT_HOME/bin:$MAVEN_HOME/bin:$GRADLE_HOME/bin
+
+WORKDIR /opt
