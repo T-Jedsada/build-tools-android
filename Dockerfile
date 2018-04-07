@@ -33,3 +33,10 @@ RUN yes | sdkmanager \
 
 # Cleaning
 RUN apt-get clean
+
+ENV PROJECT /project
+RUN mkdir $PROJECT
+WORKDIR $PROJECT
+
+USER $RUN_USER
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
