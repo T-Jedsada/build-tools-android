@@ -1,4 +1,4 @@
-FROM java-build-android
+FROM pondthaitay/java-build-android
 
 LABEL MAINTAINER Jedsada Tiwongvorakul <pondthaitay@gmail.com>
 
