@@ -10,16 +10,11 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     ANDROID_APIS="android-26" \
     ANT_HOME="/usr/share/ant" \
     MAVEN_HOME="/usr/share/maven" \
+    GRADLE_URL="https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
-# Install Gradle
 RUN cd / opt \
-    && wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip gradle-${GRADLE_VERSION}-bin.zip && \
-    rm gradle-${GRADLE_VERSION}-bin.zip &&
-
-RUN cd / opt \
-    && wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O gradle.zip \
+    && wget $GRADLE_URL -O gradle.zip \
     && unzip gradle.zip \
     && mv gradle-${GRADLE_VERSION} gradle \
     && rm gradle.zip
