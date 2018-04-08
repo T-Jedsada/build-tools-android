@@ -46,3 +46,5 @@ RUN apt-get clean
 # Go to workspace
 RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
+
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
