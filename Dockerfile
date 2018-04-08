@@ -13,10 +13,10 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     ANDROID_HOME="/opt/android-sdk-linux"
 
 # Install Gradle
-RUN cd / opt \
-    && wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip gradle-${GRADLE_VERSION}-bin.zip && \
-    rm gradle-${GRADLE_VERSION}-bin.zip &&
+RUN wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O gradle.zip && \
+    unzip -q gradle.zip -d /opt && \
+    ln -s "/opt/gradle-${GRADLE_VERSION}/bin/gradle" /usr/bin/gradle && \
+    rm gradle.zip
 
 # Configure Gradle Environment	
 ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}	
