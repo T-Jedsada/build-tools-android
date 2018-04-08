@@ -13,17 +13,6 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     GRADLE_URL="https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
-RUN cd / opt \
-    && wget $GRADLE_URL -O gradle.zip \
-    && unzip gradle.zip \
-    && mv gradle-${GRADLE_VERSION} gradle \
-    && rm gradle.zip
-
-# Configure Gradle Environment	
-ENV GRADLE_HOME /opt/gradle
-ENV PATH $PATH:$GRADLE_HOME/bin	
-ENV GRADLE_USER_HOME ~/.gradle
-
 # Install Android SDK
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
@@ -52,3 +41,26 @@ RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+
+# RUN cd / opt \
+#     && wget $GRADLE_URL -O gradle.zip \
+#     && unzip gradle.zip \
+#     && mv gradle-${GRADLE_VERSION} gradle \
+#     && rm gradle.zip
+
+# # Configure Gradle Environment	
+# ENV GRADLE_HOME /opt/gradle
+# ENV PATH $PATH:$GRADLE_HOME/bin	
+# ENV GRADLE_USER_HOME ~/.gradle
+
+# Install Gradle
+WORKDIR /usr/bin
+RUN wget wget $GRADLE_URL -O gradle.zip \
+    && unzip gradle.zip \
+    && mv gradle-${GRADLE_VERSION} gradle \
+    && rm gradle.zip
+
+# Configure Gradle Environment
+ENV GRADLE_HOME /usr/bin/gradle
+ENV PATH $PATH:$GRADLE_HOME/bin
