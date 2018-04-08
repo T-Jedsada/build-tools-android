@@ -13,8 +13,11 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     GRADLE_HOME="/usr/share/gradle" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
+# Create folder workspace
+RUN mkdir -p /opt/workspace
+
 # Install Gradle
-RUN cd /opt \
+RUN cd /opt/workspace \
     && wget $GRADLE_URL -O gradle.zip \
     && unzip gradle.zip \
     && mv gradle-4.4 gradle \
@@ -44,7 +47,6 @@ RUN yes | sdkmanager \
 RUN apt-get clean
 
 # Go to workspace
-RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
