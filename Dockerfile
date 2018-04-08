@@ -12,6 +12,8 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     GRADLE_HOME="/usr/share/gradle" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
+ENV PATH "$PATH:${ANDROID_HOME}/tools"
+
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
@@ -33,10 +35,3 @@ RUN yes | sdkmanager \
 
 # Cleaning
 RUN apt-get clean
-
-ENV PROJECT /project
-RUN mkdir $PROJECT
-WORKDIR $PROJECT
-
-USER $RUN_USER
-RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
