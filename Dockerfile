@@ -22,7 +22,6 @@ RUN cd / opt \
 # Configure Gradle Environment	
 ENV GRADLE_HOME /opt/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin	
-RUN mkdir ~/.gradle	
 ENV GRADLE_USER_HOME ~/.gradle
 
 # Install Android SDK
