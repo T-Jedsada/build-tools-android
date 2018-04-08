@@ -5,6 +5,7 @@ LABEL MAINTAINER Jedsada Tiwongvorakul <pondthaitay@gmail.com>
 ENV ANDROID_HOME /opt/android-sdk-linux
 
 ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
+    GRADLE_URL="https://services.gradle.org/distributions/gradle-4.4-all.zip" \
     ANDROID_BUILD_TOOLS_VERSION=27 \
     ANDROID_APIS="android-26" \
     ANT_HOME="/usr/share/ant" \
@@ -12,7 +13,13 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     GRADLE_HOME="/usr/share/gradle" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
-ENV PATH "$PATH:${ANDROID_HOME}/tools"
+# Install Gradle
+RUN cd /opt/workspace \
+    wget $GRADLE_URL -O gradle.zip \
+    && unzip gradle.zip \
+    && mv gradle-4.4 gradle \
+    && rm gradle.zip \
+    && mkdir .gradle
 
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
