@@ -3,6 +3,7 @@ FROM pondthaitay/java-build-android
 LABEL MAINTAINER Jedsada Tiwongvorakul <pondthaitay@gmail.com>
 
 ENV ANDROID_HOME /opt/android-sdk-linux
+ENV GRADLE_VERSION 4.4
 
 ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
     GRADLE_URL="https://services.gradle.org/distributions/gradle-4.4-all.zip" \
@@ -10,8 +11,7 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     ANDROID_APIS="android-26" \
     ANT_HOME="/usr/share/ant" \
     MAVEN_HOME="/usr/share/maven" \
-    GRADLE_VERSION=4.4\
-    GRADLE_HOME="/opt/gradle-${GRADLE_VERSION}"\
+    GRADLE_HOME="/opt/gradle-${GRADLE_VERSION}" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
 RUN cd /opt \
@@ -46,5 +46,3 @@ RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
-
-USER default
