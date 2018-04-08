@@ -13,17 +13,6 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     GRADLE_HOME="/usr/share/gradle" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
-# Create folder workspace
-RUN mkdir -p /opt/workspace
-
-# Install Gradle
-RUN cd /opt/workspace \
-    && wget $GRADLE_URL -O gradle.zip \
-    && unzip gradle.zip \
-    && mv gradle-4.4 gradle \
-    && rm gradle.zip \
-    && mkdir .gradle
-
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
@@ -43,10 +32,24 @@ RUN yes | sdkmanager \
     "extras;google;m2repository" \
     "extras;google;google_play_services"
 
+# Install Gradle
+ENV GRADLE_VERSION 4.4
+RUN wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O gradle.zip && \
+    unzip -q gradle.zip -d /opt && \
+    ln -s "/opt/gradle-${GRADLE_VERSION}/bin/gradle" /usr/bin/gradle && \
+    rm gradle.zip
+
+# Configure Gradle Environment
+ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}
+ENV PATH $PATH:$GRADLE_HOME/bin
+RUN mkdir ~/.gradle
+ENV GRADLE_USER_HOME ~/.gradle
+
 # Cleaning
 RUN apt-get clean
 
 # Go to workspace
+RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
