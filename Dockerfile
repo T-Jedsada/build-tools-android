@@ -12,6 +12,19 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     MAVEN_HOME="/usr/share/maven" \
     ANDROID_HOME="/opt/android-sdk-linux"
 
+# Install Gradle
+RUN cd / opt \
+    && wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
+    && unzip gradle-${GRADLE_VERSION}-bin.zip && \
+    rm gradle-${GRADLE_VERSION}-bin.zip &&
+
+# Configure Gradle Environment	
+ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}	
+ENV PATH $PATH:$GRADLE_HOME/bin	
+RUN mkdir ~/.gradle	
+ENV GRADLE_USER_HOME ~/.gradle
+
+# Install Android SDK
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
@@ -30,15 +43,6 @@ RUN yes | sdkmanager \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
     "extras;google;google_play_services"
-
-# Install Gradle
-RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
-    unzip gradle-${GRADLE_VERSION}-bin.zip && \
-    rm gradle-${GRADLE_VERSION}-bin.zip &&
-
-# Configure Gradle Environment	
-ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}	
-ENV PATH $PATH:$GRADLE_HOME/bin	
 
 # Cleaning
 RUN apt-get clean
