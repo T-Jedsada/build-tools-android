@@ -10,15 +10,14 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     ANDROID_APIS="android-26" \
     ANT_HOME="/usr/share/ant" \
     MAVEN_HOME="/usr/share/maven" \
-    GRADLE_HOME="/usr/share/gradle" \
+    GRADLE_VERSION=4.4\
+    GRADLE_HOME="/opt/gradle-${GRADLE_VERSION}"\
     ANDROID_HOME="/opt/android-sdk-linux"
 
 RUN cd /opt \
     && wget -q ${ANDROID_SDK_URL} -O android-sdk-tools.zip \
     && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
     && rm android-sdk-tools.zip
-
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
 RUN yes | sdkmanager --licenses
 
@@ -33,17 +32,11 @@ RUN yes | sdkmanager \
     "extras;google;google_play_services"
 
 # Install Gradle
-ENV GRADLE_VERSION 4.4
-RUN wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O gradle.zip && \
-    unzip -q gradle.zip -d /opt && \
-    ln -s "/opt/gradle-${GRADLE_VERSION}/bin/gradle" /usr/bin/gradle && \
-    rm gradle.zip
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle-${GRADLE_VERSION}-bin.zip && \
+    rm gradle-${GRADLE_VERSION}-bin.zip &&
 
-# Configure Gradle Environment
-ENV GRADLE_HOME /opt/gradle-${GRADLE_VERSION}
-ENV PATH $PATH:$GRADLE_HOME/bin
-RUN mkdir ~/.gradle
-ENV GRADLE_USER_HOME ~/.gradle
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${GRADLE_HOME}/bin:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
 # Cleaning
 RUN apt-get clean
@@ -53,3 +46,5 @@ RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+USER default
