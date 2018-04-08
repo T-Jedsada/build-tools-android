@@ -14,7 +14,7 @@ ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-38
     ANDROID_HOME="/opt/android-sdk-linux"
 
 # Install Gradle
-RUN cd /opt/workspace \
+RUN cd /opt \
     wget $GRADLE_URL -O gradle.zip \
     && unzip gradle.zip \
     && mv gradle-4.4 gradle \
