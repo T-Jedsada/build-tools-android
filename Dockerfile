@@ -31,36 +31,23 @@ RUN yes | sdkmanager \
     "build-tools;27.0.3" \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
-    "extras;google;google_play_services"
+    "extras;google;google_play_services" \
+    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
+    "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 
-# Cleaning
-RUN apt-get clean
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+# Install Gradle
+ENV SDK_HOME /otp
+RUN curl -sSL "${GRADLE_URL}" -o gradle-${GRADLE_VERSION}-bin.zip  \
+	&& unzip gradle-${GRADLE_VERSION}-bin.zip -d ${SDK_HOME}  \
+	&& rm -rf gradle-${GRADLE_VERSION}-bin.zip
+ENV GRADLE_HOME ${SDK_HOME}/gradle-${GRADLE_VERSION}
+ENV PATH ${GRADLE_HOME}/bin:$PATH
 
 # Go to workspace
 RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 
-RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
-
-
-# RUN cd / opt \
-#     && wget $GRADLE_URL -O gradle.zip \
-#     && unzip gradle.zip \
-#     && mv gradle-${GRADLE_VERSION} gradle \
-#     && rm gradle.zip
-
-# # Configure Gradle Environment	
-# ENV GRADLE_HOME /opt/gradle
-# ENV PATH $PATH:$GRADLE_HOME/bin	
-# ENV GRADLE_USER_HOME ~/.gradle
-
-# Install Gradle
-WORKDIR /usr/bin
-RUN wget wget $GRADLE_URL -O gradle.zip \
-    && unzip gradle.zip \
-    && mv gradle-${GRADLE_VERSION} gradle \
-    && rm gradle.zip
-
-# Configure Gradle Environment
-ENV GRADLE_HOME /usr/bin/gradle
-ENV PATH $PATH:$GRADLE_HOME/bin
+# Cleaning
+RUN apt-get clean
