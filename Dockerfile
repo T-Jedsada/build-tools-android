@@ -45,9 +45,5 @@ RUN curl -sSL "${GRADLE_URL}" -o gradle-${GRADLE_VERSION}-bin.zip  \
 ENV GRADLE_HOME ${SDK_HOME}/gradle-${GRADLE_VERSION}
 ENV PATH ${GRADLE_HOME}/bin:$PATH
 
-# Go to workspace
-RUN mkdir -p /opt/workspace
-WORKDIR /opt/workspace
-
 # Cleaning
 RUN apt-get clean
